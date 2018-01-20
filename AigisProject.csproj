@@ -143,12 +143,15 @@
     <Compile Include="Assets\Scripts\Damage\DamageTextScript.cs" />
     <Compile Include="Assets\Scripts\Damage\DamageTextScript1.cs" />
     <Compile Include="Assets\Scripts\Damage\DamageTextScript2.cs" />
+    <Compile Include="Assets\Scripts\Damage\EnemyDamageTextScript.cs" />
     <Compile Include="Assets\Scripts\Damage\Player0DamageTextScript.cs" />
     <Compile Include="Assets\Scripts\Damage\Player1DamageTextScript.cs" />
-    <Compile Include="Assets\Scripts\Damage\Player2DamageTextScript.cs" />
+    <Compile Include="Assets\Scripts\Damage\Player2DamageTextScritp.cs" />
+    <Compile Include="Assets\Scripts\DamageObjScript.cs" />
     <Compile Include="Assets\Scripts\DamageTextScript3.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyIconScripts.cs" />
     <Compile Include="Assets\Scripts\PlayerIcon3Scripts.cs" />
+    <Compile Include="Assets\Scripts\PlayerIcon4Scripts.cs" />
     <Compile Include="Assets\Scripts\StatusInformation.cs" />
     <Compile Include="Assets\Scripts\UnitPosScripts.cs" />
   </ItemGroup>

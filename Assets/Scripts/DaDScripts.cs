@@ -6,12 +6,10 @@ using UnityEngine.EventSystems;
 //ドラックアンドドロップの処理を行うテストスプリクト
 public class DaDScripts : MonoBehaviour {
 
-    public bool Test; 
-
 	// Use this for initialization
 	void Start () {
-        Test = false;
-	}
+
+    }
 	
 	// Update is called once per frame
 	void Update () {

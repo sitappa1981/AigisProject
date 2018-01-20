@@ -1,26 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
 
-//プレイヤー1のダメージテキストの値を代入するスプリクト
-[RequireComponent(typeof(TextMeshProUGUI))]
-public class Player1DamageTextScript : MonoBehaviour {
+public class Player0DamageTextScript : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
+    private Text DamageText;
+
+    // Use this for initialization
+    void Start() {
+
+    }
 
     // Update is called once per frame
     void Update() {
-        //上へと移動する
-        this.transform.position += new Vector3(0f, 2.0f, 0f);
+
     }
 
     //文字情報を変更するスクリプト
     void Awake() {
-        TextMeshProUGUI textmeshPro = GetComponent<TextMeshProUGUI>();
-        textmeshPro.text = ButtleScripts.Damage[2] + "";
+        //自身のテキストを変更する準備
+        this.DamageText = this.GetComponent<Text>();
+        //自身のテキストを変更する
+        this.DamageText.text = ButtleScripts.Damage[1] + "";
     }
 }

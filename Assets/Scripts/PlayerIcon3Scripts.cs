@@ -11,6 +11,7 @@ public class PlayerIcon3Scripts : MonoBehaviour {
     //テスト
     public GameObject test;
     public GameObject Sub;
+    public GameObject GameController;           //元のスプリクトを格納する場所
     SpriteRenderer MainSpriteRenderer;          //SpriteRendererを変更する際に使用
     SpriteRenderer SubSpriteRenderer;
     public Sprite TestIcon;
@@ -50,6 +51,12 @@ public class PlayerIcon3Scripts : MonoBehaviour {
         if (collision.gameObject.tag == "PlayerIcon0") {
             //接触判定を真にする
             Player[0] = true;
+        } else if (collision.gameObject.tag == "PlayerIcon1") {
+            //接触判定を真にする
+            Player[1] = true;
+        } else if (collision.gameObject.tag == "PlayerIcon2") {
+            //接触判定を真にする
+            Player[2] = true;
         }
     }
 
@@ -59,6 +66,12 @@ public class PlayerIcon3Scripts : MonoBehaviour {
         if (collision.gameObject.tag == "PlayerIcon0") {
             //接触判定を偽にする
             Player[0] = false;
+        } else if (collision.gameObject.tag == "PlayerIcon1") {
+            //接触判定を偽にする
+            Player[1] = false;
+        } else if (collision.gameObject.tag == "PlayerIcon2") {
+            //接触判定を偽にする
+            Player[2] = false;
         }
     }
 
@@ -67,23 +80,23 @@ public class PlayerIcon3Scripts : MonoBehaviour {
         //0番のアイコンの判定が真のとき
         if (Player[0]) {
             //アイコンの場所を元に戻して処理を開始する
-            my.transform.position = new Vector3(1.0f, -4.0f, 0f);
+            my.transform.position = new Vector3(6.0f, -4.0f, 0f);
+            GameController.SendMessage("CharaChange0and3", SendMessageOptions.DontRequireReceiver);
 
-            //テスト
-            Debug.Log("処理開始");
-            MainSpriteRenderer.sprite = TestIcon;
-            SubSpriteRenderer.sprite = TestIcon;
-            TestText[0].text = "…誰";
-            TestText[1].text = "/ 999";
-            TestText[2].text = "999";
-            Sub.transform.localScale = new Vector3(2, 2, 2);
-            //テスト終了
+        //1番のアイコンの判定が真のとき
+        } else if(Player[1]) {
+            //アイコンの場所を元に戻して処理を開始する
+            my.transform.position = new Vector3(6.0f, -4.0f, 0f);
+            GameController.SendMessage("CharaChange1and3", SendMessageOptions.DontRequireReceiver);
 
-
+        } else if (Player[2]) {
+            //アイコンの場所を元に戻して処理を開始する
+            my.transform.position = new Vector3(6.0f, -4.0f, 0f);
+            GameController.SendMessage("CharaChange2and3", SendMessageOptions.DontRequireReceiver);
+            //アイコンと接触していない時
         } else {
             //アイコンの場所を元に戻す
-            my.transform.position = new Vector3(1.0f ,-4.0f ,0f);
+            my.transform.position = new Vector3(6.0f ,-4.0f ,0f);
         }
     }
-
 }

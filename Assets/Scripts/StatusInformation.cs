@@ -17,11 +17,8 @@ public class StatusInformation : MonoBehaviour {
     //ベルニスステータス
     public static int[] Berunice = new int[] { 90, 5, 5 };
 
-
-
-
-
-
+    //ヴァレリーステータス
+    public static int[] Valerie = new int[] { 60, 5, 0 };
 
     //敵キャラクターのステータス設定
     //{最大HP,攻撃力,防御力}

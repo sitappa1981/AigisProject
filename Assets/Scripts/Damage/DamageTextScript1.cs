@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;
+using UnityEngine.UI;
 
-[RequireComponent(typeof(TextMeshProUGUI))]
 public class DamageTextScript1 : MonoBehaviour {
+
+    private Text DamageText;
 
     // Use this for initialization
     void Start () {
@@ -19,7 +20,7 @@ public class DamageTextScript1 : MonoBehaviour {
 
     //文字情報を変更するスクリプト
     void Awake() {
-        TextMeshProUGUI textmeshPro = GetComponent<TextMeshProUGUI>();
-        textmeshPro.text = ButtleScripts.Damage[0] / 3 + "";
+        this.DamageText = this.GetComponent<Text>();
+        this.DamageText.text = ButtleScripts.Damage[0] + "";
     }
 }

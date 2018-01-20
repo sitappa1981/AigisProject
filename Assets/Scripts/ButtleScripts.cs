@@ -6,16 +6,23 @@ using UnityEngine.UI;
 public class ButtleScripts : MonoBehaviour {
 
     //プレイヤー関係のステータス格納
-    public GameObject[] Player = new GameObject[3]; // プレイヤーキャラクターのオブジェクト格納場所
+    public GameObject[] Player = new GameObject[5]; // プレイヤーキャラクターのオブジェクト格納場所
+    public GameObject[] UnitIcon = new GameObject[5];   // プレイヤーアイコンのオブジェクト格納場所
     public static int movecheck;                    // 0or1.移動中(左右に傾く) 2.待機中(傾けを解除) 3.戦闘中(動かさない)
     public float MoveingSpeed;                      // 傾けの速度
 
     public static int[] PlayerNo = new int[5];      //ステータスを格納するナンバー
 
-
     public static int[] Player0ST = new int[4];      //プレイヤー0のステータスを格納する場所 0.最大HP 1.残りHP 2.攻撃力 3.防御力
     public static int[] Player1ST = new int[4];      //プレイヤー1のステータスを格納する場所 0.最大HP 1.残りHP 2.攻撃力 3.防御力
     public static int[] Player2ST = new int[4];      //プレイヤー2のステータスを格納する場所 0.最大HP 1.残りHP 2.攻撃力 3.防御力
+    public static int[] Player3ST = new int[4];      //プレイヤー3のステータスを格納する場所 0.最大HP 1.残りHP 2.攻撃力 3.防御力　プレイヤー3はサブメンバー
+    public static int[] Player4ST = new int[4];      //プレイヤー4のステータスを格納する場所 0.最大HP 1.残りHP 2.攻撃力 3.防御力　プレイヤー4はサブメンバー
+
+    public static int[,] PlayerST = new int[5,4];   //プレイヤーのステータス関係　前の値はプレイヤー番号、後ろの番号は種類。 0.最大HP 1.残りHP 2.攻撃力 3.防御力
+
+
+
 
     public Text[] PlayerName = new Text[5];          //各プレイヤーキャラクターの名前を格納
     public Text[] PlayerMAXHP = new Text[5];         //各プレイヤーのMAXHPを格納
@@ -23,6 +30,16 @@ public class ButtleScripts : MonoBehaviour {
 
     public static int[] Damage = new int[4];         //ダメージを格納する場所 0:敵へのダメージ 1～3:味方0～2のダメージ
 
+    //プレイヤーのスプライトの格納場所
+    SpriteRenderer[] PlayerSprite = new SpriteRenderer[5];
+    //プレイヤーアイコンのスプライトの格納場所
+    SpriteRenderer[] PlayerIconSprite = new SpriteRenderer[5];
+
+    SpriteRenderer[] PlayerBox = new SpriteRenderer[5];
+
+    //各ユニットのスプライトの格納場所
+    public Sprite[] PlayerPicture = new Sprite[4];
+    public Sprite[] IconPicture = new Sprite[4];
 
     //敵関係のステータス格納
     public GameObject[] Enemy = new GameObject[3];      //敵キャラクターのオブジェクトの格納場所
@@ -42,6 +59,8 @@ public class ButtleScripts : MonoBehaviour {
     public GameObject[] Bush = new GameObject[3];   //草表示
     bool BushMate;                                  //草表示を待つ真偽値
 
+    string PlayerTest;
+
     // Use this for initialization
     void Start () {
         //ゲームの進捗を0にする
@@ -51,20 +70,33 @@ public class ButtleScripts : MonoBehaviour {
         //傾けの時間の初期値を設定する
         MoveingSpeed = Random.Range(0.5f, 0.8f);
 
+        //スプライトレンダラーをそれぞれ編集可能状態にする
+        for (int i = 0; i < 5; i++) {
+            PlayerSprite[i] = Player[i].GetComponent<SpriteRenderer>();
+            PlayerIconSprite[i] = UnitIcon[i].GetComponent<SpriteRenderer>();
+        }
+
+
 
         //***************//
         //仮の編成
         //***************//
-        PlayerNo[0] = 1001;
-        PlayerNo[1] = 1002;
-        PlayerNo[2] = 1003;
-        Enemy[0].SetActive(false);
-        EnemyHPText.text = "";
+        PlayerNo[0] = 1001;     //ソーマ
+        PlayerNo[1] = 1002;     //フィリス
+        PlayerNo[2] = 1003;     //ベルニス
+        PlayerNo[3] = 1004;     //ヴァレリー
+        PlayerNo[4] = 1004;     //ヴァレリー
+        Enemy[0].SetActive(false);  //敵オブジェクトを非表示
+        EnemyHPText.text = "";      //敵HPの値を白紙にする
         //草表示する判定を真にする
         BushMate = true;
         //***************//
         //仮の編成ここまで
         //***************//
+
+
+
+
 
         //初期ステータスを代入する
         StatusInit();
@@ -113,142 +145,76 @@ public class ButtleScripts : MonoBehaviour {
 
     //ステータスを設定する
     public void StatusInit() {
-        //プレイヤー0のステータス情報
-        switch (PlayerNo[0]) {
-            case 1000:
+        for (int i = 0;i < 5; i++) {
+            //プレイヤー0のステータス情報
+            switch (PlayerNo[i]) {
+                case 1000:
+                    break;
+                //ソーマの場合
+                case 1001:
+                    //最大HP、残りHP、攻撃力、防御力に代入する
+                    PlayerST[i,0] = StatusInformation.soma[0];
+                    PlayerST[i,1] = StatusInformation.soma[0];
+                    PlayerST[i,2] = StatusInformation.soma[1];
+                    PlayerST[i,3] = StatusInformation.soma[2];
+                    //プレイヤーネームを格納
+                    PlayerName[i].text = "ソーマ";
+                    //画像データを入れ替える
+                    PlayerSprite[i].sprite = PlayerPicture[0];
+                    break;
 
-                break;
+                //フィリスの場合
+                case 1002:
+                    //最大HP、残りHP、攻撃力、防御力に代入する
+                    PlayerST[i, 0] = StatusInformation.Phylis[0];
+                    PlayerST[i, 1] = StatusInformation.Phylis[0];
+                    PlayerST[i, 2] = StatusInformation.Phylis[1];
+                    PlayerST[i, 3] = StatusInformation.Phylis[2];
+                    //プレイヤーネームを格納
+                    PlayerName[i].text = "フィリス";
+                    //画像データを入れ替える
+                    PlayerSprite[i].sprite = PlayerPicture[1];
+                    break;
 
-            //ソーマの場合
-            case 1001:
-                //最大HP、残りHP、攻撃力、防御力に代入する
-                Player0ST[0] = StatusInformation.soma[0];
-                Player0ST[1] = StatusInformation.soma[0];
-                Player0ST[2] = StatusInformation.soma[1];
-                Player0ST[3] = StatusInformation.soma[2];
-                //プレイヤーネームを格納
-                PlayerName[0].text = "ソーマ";
+                //ベルニスの場合
+                case 1003:
+                    //最大HP、残りHP、攻撃力、防御力に代入する
+                    PlayerST[i, 0] = StatusInformation.Berunice[0];
+                    PlayerST[i, 1] = StatusInformation.Berunice[0];
+                    PlayerST[i, 2] = StatusInformation.Berunice[1];
+                    PlayerST[i, 3] = StatusInformation.Berunice[2];
+                    //プレイヤーネームを格納
+                    PlayerName[i].text = "ベルニス";
+                    //画像データを入れ替える
+                    PlayerSprite[i].sprite = PlayerPicture[2];
+                    break;
 
-                break;
-
-            //フィリスの場合
-            case 1002:
-                //最大HP、残りHP、攻撃力、防御力に代入する
-                Player0ST[0] = StatusInformation.Phylis[0];
-                Player0ST[1] = StatusInformation.Phylis[0];
-                Player0ST[2] = StatusInformation.Phylis[1];
-                Player0ST[3] = StatusInformation.Phylis[2];
-                //プレイヤーネームを格納
-                PlayerName[0].text = "フィリス";
-                break;
-
-            //ベルニスの場合
-            case 1003:
-                //最大HP、残りHP、攻撃力、防御力に代入する
-                Player0ST[0] = StatusInformation.Berunice[0];
-                Player0ST[1] = StatusInformation.Berunice[0];
-                Player0ST[2] = StatusInformation.Berunice[1];
-                Player0ST[3] = StatusInformation.Berunice[2];
-                //プレイヤーネームを格納
-                PlayerName[0].text = "ベルニス";
-                break;
+                //ヴァレリーの場合
+                case 1004:
+                    //最大HP、残りHP、攻撃力、防御力に代入する
+                    PlayerST[i, 0] = StatusInformation.Valerie[0];
+                    PlayerST[i, 1] = StatusInformation.Valerie[0];
+                    PlayerST[i, 2] = StatusInformation.Valerie[1];
+                    PlayerST[i, 3] = StatusInformation.Valerie[2];
+                    //プレイヤーネームを格納
+                    PlayerName[i].text = "ヴァレリー";
+                    //画像データを入れ替える
+                    PlayerSprite[i].sprite = PlayerPicture[3];
+                    break;
+            }
         }
 
-        //プレイヤー1のステータス情報
-        switch (PlayerNo[1]) {
-            case 1000:
 
-                break;
 
-            //ソーマの場合
-            case 1001:
-                //最大HP、残りHP、攻撃力、防御力に代入する
-                Player1ST[0] = StatusInformation.soma[0];
-                Player1ST[1] = StatusInformation.soma[0];
-                Player1ST[2] = StatusInformation.soma[1];
-                Player1ST[3] = StatusInformation.soma[2];
-                //プレイヤーネームを格納
-                PlayerName[1].text = "ソーマ";
-
-                break;
-
-            //フィリスの場合
-            case 1002:
-                //最大HP、残りHP、攻撃力、防御力に代入する
-                Player1ST[0] = StatusInformation.Phylis[0];
-                Player1ST[1] = StatusInformation.Phylis[0];
-                Player1ST[2] = StatusInformation.Phylis[1];
-                Player1ST[3] = StatusInformation.Phylis[2];
-                //プレイヤーネームを格納
-                PlayerName[1].text = "フィリス";
-
-                break;
-
-            //ベルニスの場合
-            case 1003:
-                //最大HP、残りHP、攻撃力、防御力に代入する
-                Player1ST[0] = StatusInformation.Berunice[0];
-                Player1ST[1] = StatusInformation.Berunice[0];
-                Player1ST[2] = StatusInformation.Berunice[1];
-                Player1ST[3] = StatusInformation.Berunice[2];
-                //プレイヤーネームを格納
-                PlayerName[1].text = "ベルニス";
-
-                break;
-        }
-
-        //プレイヤー2のステータス情報
-        switch (PlayerNo[2]) {
-            case 1000:
-
-                break;
-
-            //ソーマの場合
-            case 1001:
-                //最大HP、残りHP、攻撃力、防御力に代入する
-                Player2ST[0] = StatusInformation.soma[0];
-                Player2ST[1] = StatusInformation.soma[0];
-                Player2ST[2] = StatusInformation.soma[1];
-                Player2ST[3] = StatusInformation.soma[2];
-                //プレイヤーネームを格納
-                PlayerName[2].text = "ソーマ";
-
-                break;
-
-            //フィリスの場合
-            case 1002:
-                //最大HP、残りHP、攻撃力、防御力に代入する
-                Player2ST[0] = StatusInformation.Phylis[0];
-                Player2ST[1] = StatusInformation.Phylis[0];
-                Player2ST[2] = StatusInformation.Phylis[1];
-                Player2ST[3] = StatusInformation.Phylis[2];
-                //プレイヤーネームを格納
-                PlayerName[2].text = "フィリス";
-
-                break;
-
-            //ベルニスの場合
-            case 1003:
-                //最大HP、残りHP、攻撃力、防御力に代入する
-                Player2ST[0] = StatusInformation.Berunice[0];
-                Player2ST[1] = StatusInformation.Berunice[0];
-                Player2ST[2] = StatusInformation.Berunice[1];
-                Player2ST[3] = StatusInformation.Berunice[2];
-                //プレイヤーネームを格納
-                PlayerName[2].text = "ベルニス";
-
-                break;
-        }
         //各キャラクターのHPとMAXHPを格納
-        PlayerMAXHP[0].text = "/ " + Player0ST[0];
-        PlayerMAXHP[1].text = "/ " + Player1ST[0];
-        PlayerMAXHP[2].text = "/ " + Player2ST[0];
-        PlayerHP[0].text = "" + Player0ST[0];
-        PlayerHP[1].text = "" + Player1ST[0];
-        PlayerHP[2].text = "" + Player2ST[0];
+        PlayerMAXHP[0].text = "/ " + PlayerST[0,0];
+        PlayerMAXHP[1].text = "/ " + PlayerST[1,0];
+        PlayerMAXHP[2].text = "/ " + PlayerST[2,0];
+        PlayerHP[0].text = "" + PlayerST[0, 0];
+        PlayerHP[1].text = "" + PlayerST[1, 0];
+        PlayerHP[2].text = "" + PlayerST[2, 0];
 
         GameStatus = 1;
-
     }
 
     //戦闘準備を行うスクリプト
@@ -308,9 +274,9 @@ public class ButtleScripts : MonoBehaviour {
         //2.0秒待つ
         yield return new WaitForSeconds(2.0f);
         //プレイヤー側の攻撃力を算出
-        int ATC = Player0ST[2] + Player1ST[2] + Player2ST[2];
+        int ATC = PlayerST[0, 2] + PlayerST[1, 2] + PlayerST[2, 2];
         //プレイヤー側の防御力を算出
-        int DEF = Player0ST[3] + Player1ST[3] + Player2ST[3];
+        int DEF = PlayerST[0, 3] + PlayerST[1, 3] + PlayerST[2, 3];
         //プレイヤーと敵のどちらのステータスが優れているかの判定
         bool ButtleAdv;
         //プレイヤー側の攻撃力と防御力の合計が敵の攻撃力と防御力の合計より上の場合は
@@ -318,7 +284,12 @@ public class ButtleScripts : MonoBehaviour {
             //プレイヤー有利判定が真になる
             ButtleAdv = true;
             Debug.Log("有利判定");
-        //敵の方が上の場合は
+
+            Debug.Log("プレイヤー0の攻撃力; " + PlayerST[0, 2] + "プレイヤー0の防御力; " + PlayerST[0, 3]);
+            Debug.Log("プレイヤー1の攻撃力; " + PlayerST[1, 2] + "プレイヤー0の防御力; " + PlayerST[1, 3]);
+            Debug.Log("プレイヤー2の攻撃力; " + PlayerST[2, 2] + "プレイヤー0の防御力; " + PlayerST[2, 3]);
+
+            //敵の方が上の場合は
         } else {
             //有利判定を偽にする
             ButtleAdv = false;
@@ -348,29 +319,27 @@ public class ButtleScripts : MonoBehaviour {
 
             //敵の攻撃ターン
             //各プレイヤーへのダメージを算出する
-            
-
-            Damage[1] = EnemyST[1] - Player0ST[3];
-            Damage[2] = EnemyST[1] - Player1ST[3];
-            Damage[3] = EnemyST[1] - Player2ST[3];
+            Damage[1] = EnemyST[1] - PlayerST[0, 3];
+            Damage[2] = EnemyST[1] - PlayerST[1, 3];
+            Damage[3] = EnemyST[1] - PlayerST[2, 3];
             //味方のHPをダメージ分差し引く
-            Player0ST[1] -= Damage[1];
-            Player1ST[1] -= Damage[2];
-            Player2ST[1] -= Damage[3];
+            PlayerST[0, 1] -= Damage[1];
+            PlayerST[1, 1] -= Damage[2];
+            PlayerST[2, 1] -= Damage[3];
             //ダメージの値を生成
             Instantiate(SubUI_PlayerDamageText[0], new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
             Instantiate(SubUI_PlayerDamageText[1], new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
             Instantiate(SubUI_PlayerDamageText[2], new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
             //プレイヤーHPが0以下の場合は
             if (Player0ST[1] <= 0) {
-                PlayerHP[0].text = "" + Player0ST[1];
-                PlayerHP[1].text = "" + Player1ST[1];
-                PlayerHP[2].text = "" + Player2ST[1];
+                PlayerHP[0].text = "" + PlayerST[0, 1];
+                PlayerHP[1].text = "" + PlayerST[1, 1];
+                PlayerHP[2].text = "" + PlayerST[2, 1];
                 //プレイヤーのHPが0以上の場合は
             } else {
-                PlayerHP[0].text = "" + Player0ST[1];
-                PlayerHP[1].text = "" + Player1ST[1];
-                PlayerHP[2].text = "" + Player2ST[1];
+                PlayerHP[0].text = "" + PlayerST[0, 1];
+                PlayerHP[1].text = "" + PlayerST[1, 1];
+                PlayerHP[2].text = "" + PlayerST[2, 1];
             }
             //不利判定の時の計算方法は
         } else {
@@ -396,13 +365,13 @@ public class ButtleScripts : MonoBehaviour {
             }
             //敵の攻撃ターン
             //各プレイヤーへのダメージを算出する
-            Damage[1] = (int)(EnemyST[1] * 1.2) - Player0ST[3];
-            Damage[2] = (int)(EnemyST[1] * 1.2) - Player1ST[3];
-            Damage[3] = (int)(EnemyST[1] * 1.2) - Player2ST[3];
+            Damage[1] = (int)(EnemyST[1] * 1.2) - PlayerST[0, 3];
+            Damage[2] = (int)(EnemyST[1] * 1.2) - PlayerST[1, 3];
+            Damage[3] = (int)(EnemyST[1] * 1.2) - PlayerST[2, 3];
             //味方のHPをダメージ分差し引く
-            Player0ST[1] -= Damage[1];
-            Player1ST[1] -= Damage[2];
-            Player2ST[1] -= Damage[3];
+            PlayerST[0, 1] -= Damage[1];
+            PlayerST[1, 1] -= Damage[2];
+            PlayerST[2, 1] -= Damage[3];
             //ダメージの値を生成
             Instantiate(SubUI_PlayerDamageText[0], new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
             Instantiate(SubUI_PlayerDamageText[1], new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
@@ -415,14 +384,14 @@ public class ButtleScripts : MonoBehaviour {
                 //プレイヤーのHPが0以上の場合は
             } else {
                 //各キャラのHPを表示する
-                PlayerHP[0].text = "" + Player0ST[1];
-                PlayerHP[1].text = "" + Player1ST[1];
-                PlayerHP[2].text = "" + Player2ST[1];
+                PlayerHP[0].text = "" + PlayerST[0, 1];
+                PlayerHP[1].text = "" + PlayerST[1, 1];
+                PlayerHP[2].text = "" + PlayerST[2, 1];
             }
         }
         //敵のHPが0以下の場合
         if (EnemyST[0] <= 0) {
-            //2.0秒待つ
+            //1.0秒待つ
             yield return new WaitForSeconds(1.0f);
             //攻撃可能判定を偽にする
             buttleContinuation = false;
@@ -457,6 +426,7 @@ public class ButtleScripts : MonoBehaviour {
         BushMate = true;
     }
 
+
     //敵撃破時の処理
     public void EnemyDefeat() {
         switch (EnemyNo) {
@@ -472,6 +442,184 @@ public class ButtleScripts : MonoBehaviour {
             //例外処理
             default:
                 break;
+        }
+    }
+
+    //各種キャラチェンジシステムのスプリクト
+
+    // 0と3をチェンジする時
+    public void CharaChange0and3() {
+        //主キーとなる番号を入れ替える
+        int idx = PlayerNo[0];
+        PlayerNo[0] = PlayerNo[3];
+        PlayerNo[3] = idx;
+
+        //最大HP、残りHP、攻撃力、防御力を入れ替える
+        for (int i = 0; i < 4; i++) {
+            int ida = PlayerST[0, i];
+            PlayerST[0, i] = PlayerST[3, i];
+            PlayerST[3, i] = ida;
+        }
+
+        //各キャラクターのHPとMAXHPを格納
+        PlayerMAXHP[0].text = "/ " + PlayerST[0,0];
+        PlayerHP[0].text = "" + PlayerST[0,1];
+
+        //名前を変更する
+        NameChenge();
+    }
+
+    // 0と4をチェンジする時
+    public void CharaChange0and4() {
+        //主キーとなる番号を入れ替える
+        int idx = PlayerNo[0];
+        PlayerNo[0] = PlayerNo[4];
+        PlayerNo[4] = idx;
+
+        //最大HP、残りHP、攻撃力、防御力を入れ替える
+        for (int i = 0; i < 4; i++) {
+            int ida = PlayerST[0, i];
+            PlayerST[0, i] = PlayerST[4, i];
+            PlayerST[4, i] = ida;
+        }
+
+        //各キャラクターのHPとMAXHPを格納
+        PlayerMAXHP[0].text = "/ " + PlayerST[0, 0];
+        PlayerHP[0].text = "" + PlayerST[0, 1];
+
+        //名前を変更する
+        NameChenge();
+    }
+
+    // 1と3をチェンジする時
+    public void CharaChange1and3() {
+        //主キーとなる番号を入れ替える
+        int idx = PlayerNo[1];
+        PlayerNo[1] = PlayerNo[3];
+        PlayerNo[3] = idx;
+
+        //最大HP、残りHP、攻撃力、防御力を入れ替える
+        for (int i = 0; i < 4; i++) {
+            int ida = PlayerST[1, i];
+            PlayerST[1, i] = PlayerST[3, i];
+            PlayerST[3, i] = ida;
+        }
+
+        //各キャラクターのHPとMAXHPを格納
+        PlayerMAXHP[1].text = "/ " + PlayerST[1, 0];
+        PlayerHP[1].text = "" + PlayerST[1, 1];
+
+        //名前を変更する
+        NameChenge();
+    }
+
+
+    // 1と4をチェンジする時
+    public void CharaChange1and4() {
+        //主キーとなる番号を入れ替える
+        int idx = PlayerNo[1];
+        PlayerNo[1] = PlayerNo[4];
+        PlayerNo[4] = idx;
+
+        //最大HP、残りHP、攻撃力、防御力を入れ替える
+        for (int i = 0; i < 4; i++) {
+            int ida = PlayerST[1, i];
+            PlayerST[1, i] = PlayerST[4, i];
+            PlayerST[4, i] = ida;
+        }
+
+        //各キャラクターのHPとMAXHPを格納
+        PlayerMAXHP[1].text = "/ " + PlayerST[1, 0];
+        PlayerHP[1].text = "" + PlayerST[1, 1];
+
+        //名前を変更する
+        NameChenge();
+    }
+
+
+    // 2と3をチェンジする時
+    public void CharaChange2and3() {
+        //主キーとなる番号を入れ替える
+        int idx = PlayerNo[2];
+        PlayerNo[2] = PlayerNo[3];
+        PlayerNo[3] = idx;
+
+        //最大HP、残りHP、攻撃力、防御力を入れ替える
+        for (int i = 0; i < 4; i++) {
+            int ida = PlayerST[2, i];
+            PlayerST[2, i] = PlayerST[3, i];
+            PlayerST[3, i] = ida;
+        }
+
+        //各キャラクターのHPとMAXHPを格納
+        PlayerMAXHP[2].text = "/ " + PlayerST[2, 0];
+        PlayerHP[2].text = "" + PlayerST[2, 1];
+
+        //名前を変更する
+        NameChenge();
+    }
+
+
+    // 2と4をチェンジする時
+    public void CharaChange2and4() {
+        //主キーとなる番号を入れ替える
+        int idx = PlayerNo[2];
+        PlayerNo[2] = PlayerNo[4];
+        PlayerNo[4] = idx;
+
+        //最大HP、残りHP、攻撃力、防御力を入れ替える
+        for (int i = 0; i < 4; i++) {
+            int ida = PlayerST[2, i];
+            PlayerST[2, i] = PlayerST[4, i];
+            PlayerST[4, i] = ida;
+        }
+
+        //各キャラクターのHPとMAXHPを格納
+        PlayerMAXHP[2].text = "/ " + PlayerST[2, 0];
+        PlayerHP[2].text = "" + PlayerST[2, 1];
+
+        //名前を変更する
+        NameChenge();
+    }
+
+
+    //名前、画像変更の時
+    public void NameChenge() {
+        for (int i = 0; i < 5; i++) {
+            //主キーで選択する
+            switch (PlayerNo[i]) {
+                case 1001:
+                    //アイコン、立ち絵を変更する
+                    PlayerIconSprite[i].sprite = IconPicture[0];
+                    PlayerSprite[i].sprite = PlayerPicture[0];
+                    //プレイヤーネームを格納
+                    PlayerName[i].text = "ソーマ";
+                    break;
+
+                case 1002:
+                    //アイコン、立ち絵を変更する
+                    PlayerIconSprite[i].sprite = IconPicture[1];
+                    PlayerSprite[i].sprite = PlayerPicture[1];
+                    //プレイヤーネームを格納
+                    PlayerName[i].text = "フィリス";
+                    break;
+
+                case 1003:
+                    //アイコン、立ち絵を変更する
+                    PlayerIconSprite[i].sprite = IconPicture[2];
+                    PlayerSprite[i].sprite = PlayerPicture[2];
+                    //プレイヤーネームを格納
+                    PlayerName[i].text = "ベルニス";
+                    break;
+
+                case 1004:
+                    //アイコン、立ち絵を変更する
+                    PlayerIconSprite[i].sprite = IconPicture[3];
+                    PlayerSprite[i].sprite = PlayerPicture[3];
+                    //プレイヤーネームを格納
+                    PlayerName[i].text = "ヴァレリー";
+                    break;
+            }
         }
     }
 }
