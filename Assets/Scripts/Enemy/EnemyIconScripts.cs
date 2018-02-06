@@ -10,8 +10,6 @@ public class EnemyIconScripts : MonoBehaviour {
     //紫ゴブリンステータス(HP AT DF)
     int[] Enemy = new int[] { 30, 12, 0 };
 
-
-
     // Use this for initialization
     void Start() {
         //ゲーム情報格納場所を呼び出す
@@ -40,7 +38,7 @@ public class EnemyIconScripts : MonoBehaviour {
     IEnumerator ButtleStart() {
         //敵ステータスをバトルスプリクトに代入
         for (int i = 0; i < 3; i++) {
-            ButtleScripts.EnemyST[i] = Enemy[i];
+            ButtleScripts.EnemyST[i] = StatusInformation.PurpleGoblin[i];
         }
         //0.5秒待つ
         yield return new WaitForSeconds(0.5f);

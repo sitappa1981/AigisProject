@@ -12,30 +12,19 @@ public class ButtleScripts : MonoBehaviour {
     public float MoveingSpeed;                      // 傾けの速度
 
     public static int[] PlayerNo = new int[5];      //ステータスを格納するナンバー
-
-    public static int[] Player0ST = new int[4];      //プレイヤー0のステータスを格納する場所 0.最大HP 1.残りHP 2.攻撃力 3.防御力
-    public static int[] Player1ST = new int[4];      //プレイヤー1のステータスを格納する場所 0.最大HP 1.残りHP 2.攻撃力 3.防御力
-    public static int[] Player2ST = new int[4];      //プレイヤー2のステータスを格納する場所 0.最大HP 1.残りHP 2.攻撃力 3.防御力
-    public static int[] Player3ST = new int[4];      //プレイヤー3のステータスを格納する場所 0.最大HP 1.残りHP 2.攻撃力 3.防御力　プレイヤー3はサブメンバー
-    public static int[] Player4ST = new int[4];      //プレイヤー4のステータスを格納する場所 0.最大HP 1.残りHP 2.攻撃力 3.防御力　プレイヤー4はサブメンバー
-
-    public static int[,] PlayerST = new int[5,4];   //プレイヤーのステータス関係　前の値はプレイヤー番号、後ろの番号は種類。 0.最大HP 1.残りHP 2.攻撃力 3.防御力
-
-
-
-
-    public Text[] PlayerName = new Text[5];          //各プレイヤーキャラクターの名前を格納
-    public Text[] PlayerMAXHP = new Text[5];         //各プレイヤーのMAXHPを格納
-    public Text[] PlayerHP = new Text[5];            //各プレイヤーのHPを格納
+    public static int[,] PlayerST = new int[5,5];   //プレイヤーのステータス関係　前の値はプレイヤー番号、後ろの番号は種類。 0.最大HP 1.残りHP 2.物理攻撃力 3.防御力 4,魔法攻撃力
+    public static int[,] Buff = new int[3, 6];      //プレイヤーキャラの各バフ 前の値はキャラ番号、後ろの番号は0～2がバフ、3～5がデバフ。0と3が物理攻撃力、1と4が防御力、2と5が魔法攻撃力
+    public GameObject[] hpBar = new GameObject[5];  //各キャラクターのHPバー
+    float[] Proportion = new float[5];              //各キャラクターの残りHPの割合
 
     public static int[] Damage = new int[4];         //ダメージを格納する場所 0:敵へのダメージ 1～3:味方0～2のダメージ
+
+    public static bool[] SkillCheck = new bool[5];   //スキルの使用判定
 
     //プレイヤーのスプライトの格納場所
     SpriteRenderer[] PlayerSprite = new SpriteRenderer[5];
     //プレイヤーアイコンのスプライトの格納場所
     SpriteRenderer[] PlayerIconSprite = new SpriteRenderer[5];
-
-    SpriteRenderer[] PlayerBox = new SpriteRenderer[5];
 
     //各ユニットのスプライトの格納場所
     public Sprite[] PlayerPicture = new Sprite[4];
@@ -59,8 +48,6 @@ public class ButtleScripts : MonoBehaviour {
     public GameObject[] Bush = new GameObject[3];   //草表示
     bool BushMate;                                  //草表示を待つ真偽値
 
-    string PlayerTest;
-
     // Use this for initialization
     void Start () {
         //ゲームの進捗を0にする
@@ -72,11 +59,13 @@ public class ButtleScripts : MonoBehaviour {
 
         //スプライトレンダラーをそれぞれ編集可能状態にする
         for (int i = 0; i < 5; i++) {
+            //スプライトレンダラーをそれぞれ編集可能状態にする
             PlayerSprite[i] = Player[i].GetComponent<SpriteRenderer>();
             PlayerIconSprite[i] = UnitIcon[i].GetComponent<SpriteRenderer>();
+
+            //スキルの使用判定を偽にする
+            SkillCheck[i] = false;
         }
-
-
 
         //***************//
         //仮の編成
@@ -157,8 +146,7 @@ public class ButtleScripts : MonoBehaviour {
                     PlayerST[i,1] = StatusInformation.soma[0];
                     PlayerST[i,2] = StatusInformation.soma[1];
                     PlayerST[i,3] = StatusInformation.soma[2];
-                    //プレイヤーネームを格納
-                    PlayerName[i].text = "ソーマ";
+                    PlayerST[i, 4] = StatusInformation.soma[3];
                     //画像データを入れ替える
                     PlayerSprite[i].sprite = PlayerPicture[0];
                     break;
@@ -170,8 +158,7 @@ public class ButtleScripts : MonoBehaviour {
                     PlayerST[i, 1] = StatusInformation.Phylis[0];
                     PlayerST[i, 2] = StatusInformation.Phylis[1];
                     PlayerST[i, 3] = StatusInformation.Phylis[2];
-                    //プレイヤーネームを格納
-                    PlayerName[i].text = "フィリス";
+                    PlayerST[i, 4] = StatusInformation.Phylis[3];
                     //画像データを入れ替える
                     PlayerSprite[i].sprite = PlayerPicture[1];
                     break;
@@ -183,8 +170,7 @@ public class ButtleScripts : MonoBehaviour {
                     PlayerST[i, 1] = StatusInformation.Berunice[0];
                     PlayerST[i, 2] = StatusInformation.Berunice[1];
                     PlayerST[i, 3] = StatusInformation.Berunice[2];
-                    //プレイヤーネームを格納
-                    PlayerName[i].text = "ベルニス";
+                    PlayerST[i, 4] = StatusInformation.Berunice[3];
                     //画像データを入れ替える
                     PlayerSprite[i].sprite = PlayerPicture[2];
                     break;
@@ -196,24 +182,16 @@ public class ButtleScripts : MonoBehaviour {
                     PlayerST[i, 1] = StatusInformation.Valerie[0];
                     PlayerST[i, 2] = StatusInformation.Valerie[1];
                     PlayerST[i, 3] = StatusInformation.Valerie[2];
-                    //プレイヤーネームを格納
-                    PlayerName[i].text = "ヴァレリー";
+                    PlayerST[i, 4] = StatusInformation.Valerie[3];
                     //画像データを入れ替える
                     PlayerSprite[i].sprite = PlayerPicture[3];
                     break;
             }
         }
-
-
-
-        //各キャラクターのHPとMAXHPを格納
-        PlayerMAXHP[0].text = "/ " + PlayerST[0,0];
-        PlayerMAXHP[1].text = "/ " + PlayerST[1,0];
-        PlayerMAXHP[2].text = "/ " + PlayerST[2,0];
-        PlayerHP[0].text = "" + PlayerST[0, 0];
-        PlayerHP[1].text = "" + PlayerST[1, 0];
-        PlayerHP[2].text = "" + PlayerST[2, 0];
-
+        //各キャラクターのHPバーを設定
+        for (int i= 0;i<5;i++) {
+            hpBar[i].GetComponent<Image>().fillAmount = 1.0f;
+        }
         GameStatus = 1;
     }
 
@@ -270,139 +248,93 @@ public class ButtleScripts : MonoBehaviour {
     IEnumerator ButtleLoop() {
         //攻撃可能判定を偽にする
         buttleContinuation = false;
-        Debug.Log("EnemyST[1]: " + EnemyST[1]);
         //2.0秒待つ
         yield return new WaitForSeconds(2.0f);
-        //プレイヤー側の攻撃力を算出
-        int ATC = PlayerST[0, 2] + PlayerST[1, 2] + PlayerST[2, 2];
-        //プレイヤー側の防御力を算出
-        int DEF = PlayerST[0, 3] + PlayerST[1, 3] + PlayerST[2, 3];
-        //プレイヤーと敵のどちらのステータスが優れているかの判定
-        bool ButtleAdv;
-        //プレイヤー側の攻撃力と防御力の合計が敵の攻撃力と防御力の合計より上の場合は
-        if ((ATC + DEF) >= (EnemyST[1] + EnemyST[2])) {
-            //プレイヤー有利判定が真になる
-            ButtleAdv = true;
-            Debug.Log("有利判定");
 
-            Debug.Log("プレイヤー0の攻撃力; " + PlayerST[0, 2] + "プレイヤー0の防御力; " + PlayerST[0, 3]);
-            Debug.Log("プレイヤー1の攻撃力; " + PlayerST[1, 2] + "プレイヤー0の防御力; " + PlayerST[1, 3]);
-            Debug.Log("プレイヤー2の攻撃力; " + PlayerST[2, 2] + "プレイヤー0の防御力; " + PlayerST[2, 3]);
+        //必要な処理を一旦記録
+        /*
+        ベルニスの防御力上昇のバフを実装可能にする
+        フィリスの攻撃力上昇のバフを実装可能にする
+        ヴァレリーの確定ダメージ量のバフを実装可能にする
+        */
+        //必要な処理ここまで
 
-            //敵の方が上の場合は
-        } else {
-            //有利判定を偽にする
-            ButtleAdv = false;
-            Debug.Log("不利判定");
-        }
-        //有利判定の時の計算方法は
-        if (ButtleAdv) {
-            //プレイヤーの攻撃ターン
-            //攻撃力に1.2倍した値を敵の防御力を引いてダメージ量を計算する
-            Damage[0] = (int)(ATC * 1.2) - EnemyST[2];
-            //敵のHPをダメージ分差し引く
-            EnemyST[0] -= Damage[0];
-            //ダメージの値を生成
-            Instantiate(SubUI_EnemyDamageText, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
+        //
 
-            //敵HPが0以下の場合は
-            if (EnemyST[0] <= 0) {
-                //敵HPを白紙表示
-                EnemyHPText.text = "";
-                //敵オブジェクトを不透明にする
-                Enemy[0].SetActive(false);
-                //敵HPが1以上の場合は
-            } else {
-                //敵HPを表示
-                EnemyHPText.text = "HP " + EnemyST[0];
-            }
 
-            //敵の攻撃ターン
-            //各プレイヤーへのダメージを算出する
-            Damage[1] = EnemyST[1] - PlayerST[0, 3];
-            Damage[2] = EnemyST[1] - PlayerST[1, 3];
-            Damage[3] = EnemyST[1] - PlayerST[2, 3];
-            //味方のHPをダメージ分差し引く
-            PlayerST[0, 1] -= Damage[1];
-            PlayerST[1, 1] -= Damage[2];
-            PlayerST[2, 1] -= Damage[3];
-            //ダメージの値を生成
-            Instantiate(SubUI_PlayerDamageText[0], new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
-            Instantiate(SubUI_PlayerDamageText[1], new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
-            Instantiate(SubUI_PlayerDamageText[2], new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
-            //プレイヤーHPが0以下の場合は
-            if (Player0ST[1] <= 0) {
-                PlayerHP[0].text = "" + PlayerST[0, 1];
-                PlayerHP[1].text = "" + PlayerST[1, 1];
-                PlayerHP[2].text = "" + PlayerST[2, 1];
-                //プレイヤーのHPが0以上の場合は
-            } else {
-                PlayerHP[0].text = "" + PlayerST[0, 1];
-                PlayerHP[1].text = "" + PlayerST[1, 1];
-                PlayerHP[2].text = "" + PlayerST[2, 1];
-            }
-            //不利判定の時の計算方法は
-        } else {
-            //攻撃力を敵の防御力を引いてダメージ量を計算する
+
+        //プレイヤー側の総攻撃力を算出
+        int ATC = PlayerST[0, 2] + PlayerST[1, 2] + PlayerST[2, 2] + Buff[0,0] + Buff[1,0] + Buff[2,0] + Buff[0,3] + Buff[1, 3] + Buff[2, 3];
+
+        Debug.Log("攻撃力合計 : " + ATC);
+        //プレイヤーの攻撃ターン
+        //攻撃力の合計値から敵防御力を差し引いた値が0より大きい場合
+        if ((ATC - EnemyST[2]) > 0) {
+            //攻撃力に敵の防御力を引いてダメージ量を計算する
             Damage[0] = ATC - EnemyST[2];
-            //敵のHPをダメージ分差し引く
-            EnemyST[0] -= Damage[0];
-            //出現させる座標を設定
-            Vector3 pos = new Vector3(0.0f, 0.0f, 0.0f);
-            //ダメージの値を生成
-            Instantiate(SubUI_EnemyDamageText, pos, Quaternion.identity);
-
-            //敵HPが0以下の場合は
-            if (EnemyST[0] <= 0) {
-                //敵HPを白紙表示
-                EnemyHPText.text = "";
-                //敵オブジェクトを不透明にする
-                Enemy[0].SetActive(false);
-                //敵HPが1以上の場合は
-            } else {
-                //敵HPを表示
-                EnemyHPText.text = "HP " + EnemyST[0];
-            }
-            //敵の攻撃ターン
-            //各プレイヤーへのダメージを算出する
-            Damage[1] = (int)(EnemyST[1] * 1.2) - PlayerST[0, 3];
-            Damage[2] = (int)(EnemyST[1] * 1.2) - PlayerST[1, 3];
-            Damage[3] = (int)(EnemyST[1] * 1.2) - PlayerST[2, 3];
-            //味方のHPをダメージ分差し引く
-            PlayerST[0, 1] -= Damage[1];
-            PlayerST[1, 1] -= Damage[2];
-            PlayerST[2, 1] -= Damage[3];
-            //ダメージの値を生成
-            Instantiate(SubUI_PlayerDamageText[0], new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
-            Instantiate(SubUI_PlayerDamageText[1], new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
-            Instantiate(SubUI_PlayerDamageText[2], new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
-            //プレイヤーHPが0以下の場合は
-            if (Player0ST[1] <= 0) {
-                PlayerHP[0].text = "";
-                PlayerHP[1].text = "";
-                PlayerHP[2].text = "";
-                //プレイヤーのHPが0以上の場合は
-            } else {
-                //各キャラのHPを表示する
-                PlayerHP[0].text = "" + PlayerST[0, 1];
-                PlayerHP[1].text = "" + PlayerST[1, 1];
-                PlayerHP[2].text = "" + PlayerST[2, 1];
-            }
-        }
-        //敵のHPが0以下の場合
-        if (EnemyST[0] <= 0) {
-            //1.0秒待つ
-            yield return new WaitForSeconds(1.0f);
-            //攻撃可能判定を偽にする
-            buttleContinuation = false;
-            //敵アイコン消滅
-            EnemyDefeat();
-            //進捗を移動に変更する
-            GameStatus = 1;
-
+        //0以下の場合
         } else {
-            //攻撃可能判定を真にする
+            //ダメージを0にする(あくまで仮、最低ダメージ保証がある為)
+            Damage[0] = 0;
+        }
+
+
+        //敵のHPをダメージ分差し引く
+        EnemyST[0] -= Damage[0];
+        //ダメージの値を生成
+        Instantiate(SubUI_EnemyDamageText, new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
+        //敵HPが0以下の場合は
+        if (EnemyST[0] <= 0) {
+            //敵HPを白紙表示
+            EnemyHPText.text = "";
+            //敵オブジェクトを不透明にする
+            Enemy[0].SetActive(false);
+            //敵HPが1以上の場合は
+        } else {
+            //敵HPを表示
+            EnemyHPText.text = "HP " + EnemyST[0];
+        }
+
+        //敵の攻撃ターン
+        //各プレイヤーへのダメージを算出する
+        Damage[1] = EnemyST[1] - (PlayerST[0, 3] + Buff[0, 1] + Buff[0, 4]); 
+        Damage[2] = EnemyST[1] - (PlayerST[1, 3] + Buff[1, 1] + Buff[1, 4]);
+        Damage[3] = EnemyST[1] - (PlayerST[2, 3] + Buff[2, 1] + Buff[2, 4]);
+        //味方のHPをダメージ分差し引く
+        PlayerST[0, 1] -= Damage[1];
+        PlayerST[1, 1] -= Damage[2];
+        PlayerST[2, 1] -= Damage[3];
+        //ダメージの値を生成
+        Instantiate(SubUI_PlayerDamageText[0], new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
+        Instantiate(SubUI_PlayerDamageText[1], new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
+        Instantiate(SubUI_PlayerDamageText[2], new Vector3(0.0f, 0.0f, 0.0f), Quaternion.identity);
+        //プレイヤーHPが0以下の場合は
+        if (PlayerST[0,1] <= 0) {
+
+            //仮での値
+
+            //残りHPをHPゲージに適応する
+            HP_Proportion();
+
+        //プレイヤーのHPが0以上の場合は
+        } else {
+            //残りHPをHPゲージに適応する
+            HP_Proportion();
+        }
+        //全員生きてる場合は
+        if (EnemyST[0] > 0 && PlayerST[0,1] > 0 && PlayerST[1, 1] > 0 && PlayerST[2, 1] > 0) {
+            //再度ループする
             buttleContinuation = true;
+        //敵が死んでる場合
+        } else {
+            //敵アイコンの削除命令
+            EnemyIcon[0].SendMessage("EnemyDefeat00", SendMessageOptions.DontRequireReceiver);
+            //アイコンの移動を真にする
+            UnitPosScripts.goinit = true;
+            //傾け処理の値を0にする
+            movecheck = 0;
+            //進捗管理を移動中にする
+            GameStatus = 1;
         }
     }
 
@@ -454,6 +386,11 @@ public class ButtleScripts : MonoBehaviour {
         PlayerNo[0] = PlayerNo[3];
         PlayerNo[3] = idx;
 
+        //スキルの使用判定を入れ替える
+        bool skill = SkillCheck[0];
+        SkillCheck[0] = SkillCheck[3];
+        SkillCheck[3] = skill;
+
         //最大HP、残りHP、攻撃力、防御力を入れ替える
         for (int i = 0; i < 4; i++) {
             int ida = PlayerST[0, i];
@@ -461,9 +398,8 @@ public class ButtleScripts : MonoBehaviour {
             PlayerST[3, i] = ida;
         }
 
-        //各キャラクターのHPとMAXHPを格納
-        PlayerMAXHP[0].text = "/ " + PlayerST[0,0];
-        PlayerHP[0].text = "" + PlayerST[0,1];
+        //残りHPをHPゲージに適応する
+        HP_Proportion();
 
         //名前を変更する
         NameChenge();
@@ -483,9 +419,8 @@ public class ButtleScripts : MonoBehaviour {
             PlayerST[4, i] = ida;
         }
 
-        //各キャラクターのHPとMAXHPを格納
-        PlayerMAXHP[0].text = "/ " + PlayerST[0, 0];
-        PlayerHP[0].text = "" + PlayerST[0, 1];
+        //残りHPをHPゲージに適応する
+        HP_Proportion();
 
         //名前を変更する
         NameChenge();
@@ -505,9 +440,8 @@ public class ButtleScripts : MonoBehaviour {
             PlayerST[3, i] = ida;
         }
 
-        //各キャラクターのHPとMAXHPを格納
-        PlayerMAXHP[1].text = "/ " + PlayerST[1, 0];
-        PlayerHP[1].text = "" + PlayerST[1, 1];
+        //残りHPをHPゲージに適応する
+        HP_Proportion();
 
         //名前を変更する
         NameChenge();
@@ -528,9 +462,8 @@ public class ButtleScripts : MonoBehaviour {
             PlayerST[4, i] = ida;
         }
 
-        //各キャラクターのHPとMAXHPを格納
-        PlayerMAXHP[1].text = "/ " + PlayerST[1, 0];
-        PlayerHP[1].text = "" + PlayerST[1, 1];
+        //残りHPをHPゲージに適応する
+        HP_Proportion();
 
         //名前を変更する
         NameChenge();
@@ -551,9 +484,8 @@ public class ButtleScripts : MonoBehaviour {
             PlayerST[3, i] = ida;
         }
 
-        //各キャラクターのHPとMAXHPを格納
-        PlayerMAXHP[2].text = "/ " + PlayerST[2, 0];
-        PlayerHP[2].text = "" + PlayerST[2, 1];
+        //残りHPをHPゲージに適応する
+        HP_Proportion();
 
         //名前を変更する
         NameChenge();
@@ -574,9 +506,8 @@ public class ButtleScripts : MonoBehaviour {
             PlayerST[4, i] = ida;
         }
 
-        //各キャラクターのHPとMAXHPを格納
-        PlayerMAXHP[2].text = "/ " + PlayerST[2, 0];
-        PlayerHP[2].text = "" + PlayerST[2, 1];
+        //残りHPをHPゲージに適応する
+        HP_Proportion();
 
         //名前を変更する
         NameChenge();
@@ -592,34 +523,52 @@ public class ButtleScripts : MonoBehaviour {
                     //アイコン、立ち絵を変更する
                     PlayerIconSprite[i].sprite = IconPicture[0];
                     PlayerSprite[i].sprite = PlayerPicture[0];
-                    //プレイヤーネームを格納
-                    PlayerName[i].text = "ソーマ";
                     break;
 
                 case 1002:
                     //アイコン、立ち絵を変更する
                     PlayerIconSprite[i].sprite = IconPicture[1];
                     PlayerSprite[i].sprite = PlayerPicture[1];
-                    //プレイヤーネームを格納
-                    PlayerName[i].text = "フィリス";
                     break;
 
                 case 1003:
                     //アイコン、立ち絵を変更する
                     PlayerIconSprite[i].sprite = IconPicture[2];
                     PlayerSprite[i].sprite = PlayerPicture[2];
-                    //プレイヤーネームを格納
-                    PlayerName[i].text = "ベルニス";
                     break;
 
                 case 1004:
                     //アイコン、立ち絵を変更する
                     PlayerIconSprite[i].sprite = IconPicture[3];
                     PlayerSprite[i].sprite = PlayerPicture[3];
-                    //プレイヤーネームを格納
-                    PlayerName[i].text = "ヴァレリー";
                     break;
             }
         }
     }
+
+    //HPゲージの変更プログラム
+    public void HP_Proportion() {
+        //プレイヤー0の残りHPをゲージにする
+        Proportion[0] = (float)PlayerST[0, 1] / (float)PlayerST[0, 0];
+        hpBar[0].GetComponent<Image>().fillAmount = Proportion[0];
+        //プレイヤー1の残りHPをゲージにする
+        Proportion[1] = (float)PlayerST[1, 1] / (float)PlayerST[1, 0];
+        hpBar[1].GetComponent<Image>().fillAmount = Proportion[1];
+        //プレイヤー2の残りHPをゲージにする
+        Proportion[2] = (float)PlayerST[2, 1] / (float)PlayerST[2, 0];
+        hpBar[2].GetComponent<Image>().fillAmount = Proportion[2];
+        //プレイヤー3の残りHPをゲージにする
+        Proportion[3] = (float)PlayerST[3, 1] / (float)PlayerST[3, 0];
+        hpBar[4].GetComponent<Image>().fillAmount = Proportion[3];
+        //プレイヤー4の残りHPをゲージにする
+        Proportion[4] = (float)PlayerST[4, 1] / (float)PlayerST[4, 0];
+        hpBar[4].GetComponent<Image>().fillAmount = Proportion[4];
+
+
+
+    }
+
+
+
+
 }

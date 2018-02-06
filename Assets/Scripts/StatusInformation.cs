@@ -4,38 +4,58 @@ using UnityEngine;
 
 public class StatusInformation : MonoBehaviour {
 
+    //////////////////////////////////////////
     //プレイヤーキャラクターのステータス設定
-    //{最大HP,攻撃力,防御力}
-    //
+    //{最大HP,物理攻撃力,防御力,魔法攻撃力}
+    //////////////////////////////////////////
 
     //ソーマステータス
-    public static int[] soma = new int[] {30, 10, 0};
+    public static int[] soma = new int[] { 500, 50, 0, 0 };
+    public static string somaSkill = "ソーマスキル名";
 
     //フィリスステータス
-    public static int[] Phylis = new int[] {60, 5, 2};
+    public static int[] Phylis = new int[] { 600, 50, 20, 0 };
+    public static string PhylisSkill = "フィリススキル名";
 
     //ベルニスステータス
-    public static int[] Berunice = new int[] { 90, 5, 5 };
+    public static int[] Berunice = new int[] { 900, 50, 50, 0 };
+    public static string BeruniceSkill = "ベルニススキル名";
 
     //ヴァレリーステータス
-    public static int[] Valerie = new int[] { 60, 5, 0 };
+    public static int[] Valerie = new int[] { 600, 50, 0, 50 };
+    public static string ValerieSkill = "ヴァレリースキル名";
 
+
+
+
+
+    ////////////////////////////////////////
     //敵キャラクターのステータス設定
-    //{最大HP,攻撃力,防御力}
+    //{最大HP,物理攻撃力,防御力,魔法攻撃力}
+    ////////////////////////////////////////
 
     //紫ゴブリンステータス
-    public static int[] PurpleGoblin = new int[] { 100, 30, 20 };
+    public static int[] PurpleGoblin = new int[] { 200, 100, 20, 0 };
+
+    ////////////////////////
+    //スキルによるバフ効果
+    ////////////////////////
+
+    //フィリスのバフ
+    public static int[] PhylisBuf = new int[3];
+
+    //ベルニスのバフ
+    public static int[] BeruniceBuff = new int[3];
+
+    //ヴァレリーのバフ
+    public static int[] ValerieBuff = new int[3];
 
 
-
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
+    void Start() {
+        //バフ関係の値をリセット
+        for (int i = 0; i <5;i++) {
+            //フィリスのバフを白紙にする
+            PhylisBuf[i] = 0;
+        }
+    }
 }
