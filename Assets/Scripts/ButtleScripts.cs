@@ -74,7 +74,7 @@ public class ButtleScripts : MonoBehaviour {
         PlayerNo[1] = 1002;     //フィリス
         PlayerNo[2] = 1003;     //ベルニス
         PlayerNo[3] = 1004;     //ヴァレリー
-        PlayerNo[4] = 1004;     //ヴァレリー
+        PlayerNo[4] = 1005;     //アリサ
         Enemy[0].SetActive(false);  //敵オブジェクトを非表示
         EnemyHPText.text = "";      //敵HPの値を白紙にする
         //草表示する判定を真にする
@@ -185,6 +185,17 @@ public class ButtleScripts : MonoBehaviour {
                     PlayerST[i, 4] = StatusInformation.Valerie[3];
                     //画像データを入れ替える
                     PlayerSprite[i].sprite = PlayerPicture[3];
+                    break;
+                //ヴァレリーの場合
+                case 1005:
+                    //最大HP、残りHP、攻撃力、防御力に代入する
+                    PlayerST[i, 0] = StatusInformation.Arisa[0];
+                    PlayerST[i, 1] = StatusInformation.Arisa[0];
+                    PlayerST[i, 2] = StatusInformation.Arisa[1];
+                    PlayerST[i, 3] = StatusInformation.Arisa[2];
+                    PlayerST[i, 4] = StatusInformation.Arisa[3];
+                    //画像データを入れ替える
+                    PlayerSprite[i].sprite = PlayerPicture[4];
                     break;
             }
         }
@@ -542,6 +553,12 @@ public class ButtleScripts : MonoBehaviour {
                     PlayerIconSprite[i].sprite = IconPicture[3];
                     PlayerSprite[i].sprite = PlayerPicture[3];
                     break;
+                case 1005:
+                    //アイコン、立ち絵を変更する
+                    PlayerIconSprite[i].sprite = IconPicture[4];
+                    PlayerSprite[i].sprite = PlayerPicture[4];
+                    break;
+
             }
         }
     }

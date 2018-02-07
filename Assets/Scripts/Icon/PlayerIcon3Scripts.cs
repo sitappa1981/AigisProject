@@ -80,23 +80,23 @@ public class PlayerIcon3Scripts : MonoBehaviour {
         //0番のアイコンの判定が真のとき
         if (Player[0]) {
             //アイコンの場所を元に戻して処理を開始する
-            my.transform.position = new Vector3(6.0f, -3.6f, 0f);
+            my.transform.position = new Vector3(3.5f, -3.6f, 0f);
             GameController.SendMessage("CharaChange0and3", SendMessageOptions.DontRequireReceiver);
 
         //1番のアイコンの判定が真のとき
         } else if(Player[1]) {
             //アイコンの場所を元に戻して処理を開始する
-            my.transform.position = new Vector3(6.0f, -3.6f, 0f);
+            my.transform.position = new Vector3(3.5f, -3.6f, 0f);
             GameController.SendMessage("CharaChange1and3", SendMessageOptions.DontRequireReceiver);
 
         } else if (Player[2]) {
             //アイコンの場所を元に戻して処理を開始する
-            my.transform.position = new Vector3(6.0f, -3.6f, 0f);
+            my.transform.position = new Vector3(3.5f, -3.6f, 0f);
             GameController.SendMessage("CharaChange2and3", SendMessageOptions.DontRequireReceiver);
             //アイコンと接触していない時
         } else {
             //アイコンの場所を元に戻す
-            my.transform.position = new Vector3(6.0f , -3.6f, 0f);
+            my.transform.position = new Vector3(3.5f, -3.6f, 0f);
         }
     }
 }

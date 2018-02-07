@@ -25,8 +25,9 @@ public class StatusInformation : MonoBehaviour {
     public static int[] Valerie = new int[] { 600, 50, 0, 50 };
     public static string ValerieSkill = "ヴァレリースキル名";
 
-
-
+    //アリサステータス
+    public static int[] Arisa = new int[] { 500, 20, 0, 0 };
+    public static string ArisaSkill = "アリサスキル名";
 
 
     ////////////////////////////////////////

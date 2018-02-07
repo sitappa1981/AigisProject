@@ -78,14 +78,6 @@ public class UnitIcon2Script : MonoBehaviour {
                 Skill_Name.text = "ソーマのスキル名";
                 //キャラのスキルテキスト
                 Skill_Text.text = "ソーマスキル内容ソーマスキル内容";
-                //ユニットの残りHP / MAXHP
-                Unit_HP.text = "HP " + ButtleScripts.PlayerST[2, 1] + " / " + ButtleScripts.PlayerST[2, 0];
-                //ユニットの物理攻撃力
-                Unit_A_ATC.text = "物理攻撃力 " + ButtleScripts.PlayerST[2, 2] + "(" + (ButtleScripts.Buff[2, 0] + ButtleScripts.Buff[2, 3]) + ")";
-                //ユニットの魔法攻撃力
-                Unit_B_ATC.text = "魔法攻撃力 " + ButtleScripts.PlayerST[2, 4] + "(" + (ButtleScripts.Buff[2, 2] + ButtleScripts.Buff[2, 5]) + ")";
-                //ユニットの防御力
-                Unit_DEF.text = "防御力　　 " + ButtleScripts.PlayerST[2, 3] + "(" + (ButtleScripts.Buff[2, 1] + ButtleScripts.Buff[2, 4]) + ")";
 
                 break;
 
@@ -96,15 +88,6 @@ public class UnitIcon2Script : MonoBehaviour {
                 Skill_Name.text = "フィリスのスキル名";
                 //キャラのスキルテキスト
                 Skill_Text.text = "フィリススキル内容フィリススキル内容";
-                //ユニットの残りHP / MAXHP
-                Unit_HP.text = "HP " + ButtleScripts.PlayerST[2, 1] + " / " + ButtleScripts.PlayerST[2, 0];
-                //ユニットの物理攻撃力
-                Unit_A_ATC.text = "物理攻撃力 " + ButtleScripts.PlayerST[2, 2] + "(" + (ButtleScripts.Buff[2, 0] + ButtleScripts.Buff[2, 3]) + ")";
-                //ユニットの魔法攻撃力
-                Unit_B_ATC.text = "魔法攻撃力 " + ButtleScripts.PlayerST[2, 4] + "(" + (ButtleScripts.Buff[2, 2] + ButtleScripts.Buff[2, 5]) + ")";
-                //ユニットの防御力
-                Unit_DEF.text = "防御力　　 " + ButtleScripts.PlayerST[2, 3] + "(" + (ButtleScripts.Buff[2, 1] + ButtleScripts.Buff[2, 4]) + ")";
-
                 break;
 
             case 1003:
@@ -114,14 +97,6 @@ public class UnitIcon2Script : MonoBehaviour {
                 Skill_Name.text = "ベルニスのスキル名";
                 //キャラのスキルテキスト
                 Skill_Text.text = "ベルニススキル内容ベルニススキル内容";
-                //ユニットの残りHP / MAXHP
-                Unit_HP.text = "HP " + ButtleScripts.PlayerST[2, 1] + " / " + ButtleScripts.PlayerST[2, 0];
-                //ユニットの物理攻撃力
-                Unit_A_ATC.text = "物理攻撃力 " + ButtleScripts.PlayerST[2, 2] + "(" + (ButtleScripts.Buff[2, 0] + ButtleScripts.Buff[2, 3]) + ")";
-                //ユニットの魔法攻撃力
-                Unit_B_ATC.text = "魔法攻撃力 " + ButtleScripts.PlayerST[2, 4] + "(" + (ButtleScripts.Buff[2, 2] + ButtleScripts.Buff[2, 5]) + ")";
-                //ユニットの防御力
-                Unit_DEF.text = "防御力　　 " + ButtleScripts.PlayerST[2, 3] + "(" + (ButtleScripts.Buff[2, 1] + ButtleScripts.Buff[2, 4]) + ")";
                 break;
 
             case 1004:
@@ -131,22 +106,31 @@ public class UnitIcon2Script : MonoBehaviour {
                 Skill_Name.text = "ヴァレリーのスキル名";
                 //キャラのスキルテキスト
                 Skill_Text.text = "ヴァレリースキル内容ヴァレリースキル内容";
-                //ユニットの残りHP / MAXHP
-                Unit_HP.text = "HP " + ButtleScripts.PlayerST[2, 1] + " / " + ButtleScripts.PlayerST[2, 0];
-                //ユニットの物理攻撃力
-                Unit_A_ATC.text = "物理攻撃力 " + ButtleScripts.PlayerST[2, 2] + "(" + (ButtleScripts.Buff[2, 0] + ButtleScripts.Buff[2, 3]) + ")";
-                //ユニットの魔法攻撃力
-                Unit_B_ATC.text = "魔法攻撃力 " + ButtleScripts.PlayerST[2, 4] + "(" + (ButtleScripts.Buff[2, 2] + ButtleScripts.Buff[2, 5]) + ")";
-                //ユニットの防御力
-                Unit_DEF.text = "防御力　　 " + ButtleScripts.PlayerST[2, 3] + "(" + (ButtleScripts.Buff[2, 1] + ButtleScripts.Buff[2, 4]) + ")";
                 break;
+
+            case 1005:
+                //キャラ名
+                Unit_Name.text = "アリサ";
+                //キャラのスキル名
+                Skill_Name.text = "アリサのスキル名";
+                //キャラのスキルテキスト
+                Skill_Text.text = "アリサスキル内容アリサスキル内容";
+                break;
+
 
             //例外処理
             default:
                 break;
         }
-        //スキル使用判定を真にする
-        ButtleScripts.SkillCheck[2] = true;
+        //ステータスの共通事項
+        //ユニットの残りHP / MAXHP
+        Unit_HP.text = "HP " + ButtleScripts.PlayerST[2, 1] + " / " + ButtleScripts.PlayerST[2, 0];
+        //ユニットの物理攻撃力
+        Unit_A_ATC.text = "物理攻撃力 " + ButtleScripts.PlayerST[2, 2] + "(" + (ButtleScripts.Buff[2, 0] + ButtleScripts.Buff[2, 3]) + ")";
+        //ユニットの魔法攻撃力
+        Unit_B_ATC.text = "魔法攻撃力 " + ButtleScripts.PlayerST[2, 4] + "(" + (ButtleScripts.Buff[2, 2] + ButtleScripts.Buff[2, 5]) + ")";
+        //ユニットの防御力
+        Unit_DEF.text = "防御力　　 " + ButtleScripts.PlayerST[2, 3] + "(" + (ButtleScripts.Buff[2, 1] + ButtleScripts.Buff[2, 4]) + ")";
     }
 
     //アイコンをクリックされた時、スキルを発動させる
@@ -201,6 +185,12 @@ public class UnitIcon2Script : MonoBehaviour {
 
 
                 break;
+
+            case 1005:
+                //味方のHP回復(一瞬)
+                Debug.Log("アリサスキル発動");
+                break;
+
         }
         //スキルテキストを変更する
         SkillText();

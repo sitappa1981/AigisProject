@@ -2823,10 +2823,12 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 69ee33ad52ee5854c94de7831bc95065, type: 3}
   - {fileID: 21300000, guid: c4cbc78f9a9d1e44c9244293fc14f7e8, type: 3}
   - {fileID: 21300000, guid: 6235f64c956e8fd4781f0bbd311d83d0, type: 3}
+  - {fileID: 21300000, guid: 2d5a51e1d1163d244bc43adaec311fe1, type: 3}
   IconPicture:
   - {fileID: 21300000, guid: 91415f16cdd83274e89a61a6201e3bb8, type: 3}
   - {fileID: 21300000, guid: f9631d6f169ce6540bcef9e4bf70e984, type: 3}
   - {fileID: 21300000, guid: 6f1163e1fe6f02e4d98158b3862cbae4, type: 3}
+  - {fileID: 21300000, guid: a86de185dcac9df43914ce0fc6d86779, type: 3}
   - {fileID: 21300000, guid: a86de185dcac9df43914ce0fc6d86779, type: 3}
   Enemy:
   - {fileID: 1411663461}
